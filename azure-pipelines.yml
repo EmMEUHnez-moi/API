@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
   branches:
     include:
@@ -12,25 +7,24 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
-    addToPath: true
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
 
-- script: |
-    pip install html2text
-    python generate_markdown.py
-  displayName: 'Générer la documentation Markdown'
+  - script: |
+      pip install html2text
+      python scripts/generate_markdown.py
+    displayName: 'Générer la documentation Markdown'
 
-- task: Bash@3
-  displayName: 'Copier les fichiers Markdown dans le Wiki'
-  inputs:
-    targetType: 'inline'
-    script: |
-      git clone https://dev.azure.com/Willimath/Willimath%20API/_git/Willimath-API.wiki
-      cp -r docs/*.md wiki/
-      cd wiki
-      git add .
-      git commit -m "Mise à jour automatique des fichiers Markdown"
-      git push
-
+  - task: Bash@3
+    displayName: 'Copier les fichiers Markdown dans le Wiki'
+    inputs:
+      targetType: 'inline'
+      script: |
+        git clone https://${AZURE_DEVOPS_PAT}@dev.azure.com/Willimath/Willimath%20API/_git/Wiki
+        cp -r docs/*.md wiki/
+        cd wiki
+        git add .
+        git commit -m "Mise à jour automatique des fichiers Markdown"
+        git push
