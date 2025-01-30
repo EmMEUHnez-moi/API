@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface UserTripRepository extends JpaRepository<UserTripEntity, Integer> {
     @Query(value = "SELECT * FROM user_trip WHERE user_id = ?1", nativeQuery = true)
     Optional<List<UserTripEntity>> findByUserId(Integer userId);
+
+    @Query(value = "SELECT * FROM user_trip WHERE trip_id = ?1", nativeQuery = true)
+    Optional<List<UserTripEntity>> findByTripId(int id);
 }

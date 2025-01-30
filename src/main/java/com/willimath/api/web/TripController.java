@@ -3,6 +3,7 @@ package com.willimath.api.web;
 import com.willimath.api.Trip;
 import com.willimath.api.service.TripService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class TripController {
     }
 
     @GetMapping("/{user_id}")
-    public List<Trip> getTrajetByUser(@RequestParam("user_id") Integer user) {
+    public List<Trip> getTrajetByUser(@PathVariable("user_id") Integer user) {
         return tripService.getTrajetByUser(user);
     }
 }

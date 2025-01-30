@@ -51,4 +51,31 @@ ALTER TABLE public.role OWNER TO postgres;
 ALTER TABLE public.trip OWNER TO postgres;
 ALTER TABLE public.user_trip OWNER TO postgres;
 
+-- Insertions pour la table "user"
+INSERT INTO public.user (name, surname, email, password) VALUES
+    ('Alice', 'Dupont', 'alice.dupont@example.com', 'password123'),
+    ('Bob', 'Martin', 'bob.martin@example.com', 'securepass'),
+    ('Charlie', 'Durand', 'charlie.durand@example.com', 'mypassword');
+
+-- Insertions pour la table "role"
+INSERT INTO public.role (name) VALUES
+    ('Driver'),
+    ('Passenger'),
+    ('Admin');
+
+-- Insertions pour la table "trip"
+INSERT INTO public.trip (from_location, to_location, start_date, end_date, hour_of_departure, hour_of_arrival, price, number_of_seats) VALUES
+    ('Paris', 'Lyon', '2025-01-20', '2025-01-20', '08:00:00', '12:00:00', 50.00, 3),
+    ('Lille', 'Bruxelles', '2025-01-22', '2025-01-22', '10:00:00', '11:30:00', 20.00, 4),
+    ('Marseille', 'Nice', '2025-01-25', '2025-01-25', '09:30:00', '11:00:00', 30.00, 2);
+
+-- Insertions pour la table "user_trip"
+INSERT INTO public.user_trip (user_id, trip_id, role_id) VALUES
+    (1, 1, 1), -- Alice est le conducteur du premier trajet
+    (2, 1, 2), -- Bob est un passager du premier trajet
+    (3, 2, 1), -- Charlie est le conducteur du deuxième trajet
+    (2, 2, 2), -- Bob est un passager du deuxième trajet
+    (1, 3, 2); -- Alice est un passager du troisième trajet
+
+
 

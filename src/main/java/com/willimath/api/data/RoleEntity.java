@@ -3,6 +3,7 @@ package com.willimath.api.data;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "role")
 public class RoleEntity {
 
     @Id

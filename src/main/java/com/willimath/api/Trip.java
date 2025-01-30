@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public record Trip(
     String from_location,
@@ -15,6 +16,7 @@ public record Trip(
     @JsonFormat(pattern = "HH:mm:ss")
     LocalTime hour_of_arrival,
     float price,
-    int number_of_seats
+    int number_of_seats,
+    List<UserFromTrip> people
 ) {
 }
