@@ -2,6 +2,8 @@ package com.willimath.api.data;
 
 import jakarta.persistence.*;
 
+import java.util.Optional;
+
 @Entity
 @Table(name = "user", schema = "public")
 public class UserEntity {

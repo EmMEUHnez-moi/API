@@ -1,13 +1,12 @@
 package com.willimath.api.service;
 
-import com.willimath.api.Role;
-import com.willimath.api.User;
-import com.willimath.api.UserFromTrip;
+import com.willimath.api.model.Role;
+import com.willimath.api.model.UserFromTrip;
 import com.willimath.api.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.willimath.api.Trip;
+import com.willimath.api.model.Trip;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +26,10 @@ public class TripService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    public TripService(TripRepository tripRepository) {
+        this.tripRepository = tripRepository;
+    }
 
     private List<UserTripEntity> getUserFromTrip(TripEntity tripEntity) {
         Optional<List<UserTripEntity>> userTrip = userTripRepository.findByTripId(tripEntity.getId());
@@ -61,14 +64,11 @@ public class TripService {
             trip.number_of_seats()
         ));
         for (UserFromTrip user : trip.people()) {
-            userTripRepository.save(new UserTripEntity(
-                new UserEntity(
-                        userRepository.findByEmail(user.user().email()).get().getId(),
-                        user.user().name(),
-                        user.user().surname(),
-                        user.user().email(),
-                        user.user().password()
-                ),
+            Optional<UserEntity> userEntity = userRepository.findById(user.userId());
+            if(userEntity.isEmpty()) {
+                throw new RuntimeException("User not found");
+            }
+            userTripRepository.save(new UserTripEntity(userEntity.get(),
                 TE,
                 roleRepository.findByName(user.role().name()).get()
             ));
@@ -88,12 +88,7 @@ public class TripService {
                 tripentiry.getNumber_of_seats(),
                 people.stream()
                         .map(userTripEntity -> new UserFromTrip(
-                                new User(
-                                        userTripEntity.getUser().getName(),
-                                        userTripEntity.getUser().getSurname(),
-                                        userTripEntity.getUser().getEmail(),
-                                        userTripEntity.getUser().getPassword()
-                                ),
+                                userTripEntity.getUser().getId(),
                                 new Role(userTripEntity.getRole().getName())
                         )
                 ).toList()
@@ -109,5 +104,11 @@ public class TripService {
                 .map(userTripEntity -> convert(userTripEntity.getTrip(), List.of(userTripEntity)))
                 .toList();
 
+    }
+
+    public List<Trip> getAllTrajets() {
+        return tripRepository.findAll().stream()
+                .map(tripEntity -> convert(tripEntity, getUserFromTrip(tripEntity)))
+                .toList();
     }
 }

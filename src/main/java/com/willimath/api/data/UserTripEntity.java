@@ -2,6 +2,8 @@ package com.willimath.api.data;
 
 import jakarta.persistence.*;
 
+import java.util.Optional;
+
 @Entity
 @Table(name = "user_trip", schema = "public")
 public class UserTripEntity {
@@ -36,6 +38,9 @@ public class UserTripEntity {
         this.user = user;
         this.trip = trip;
         this.role = role;
+    }
+
+    public UserTripEntity(UserEntity userEntity) {
     }
 
     public Integer getId() {
