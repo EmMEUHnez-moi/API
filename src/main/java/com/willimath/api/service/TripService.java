@@ -34,7 +34,7 @@ public class TripService {
     private List<UserTripEntity> getUserFromTrip(TripEntity tripEntity) {
         Optional<List<UserTripEntity>> userTrip = userTripRepository.findByTripId(tripEntity.getId());
         if(userTrip.isEmpty()) {
-            throw  new RuntimeException("No user found");
+            throw  new TripNotFoundException(tripEntity.getId());
         }
         return userTrip.get();
     }
@@ -45,7 +45,7 @@ public class TripService {
                 villearrivee,
                 LocalDate.parse(date));
         if(trip.isEmpty()) {
-            throw  new RuntimeException("No trip found");
+            throw  new TripNotFoundException(villedepart, villearrivee, date);
         }
         return trip.get().stream()
                 .map(tripEntity -> convert(tripEntity, getUserFromTrip(tripEntity)))
@@ -66,7 +66,7 @@ public class TripService {
         for (UserFromTrip user : trip.people()) {
             Optional<UserEntity> userEntity = userRepository.findById(user.userId());
             if(userEntity.isEmpty()) {
-                throw new RuntimeException("User not found");
+                throw new UserNotFoundException(user.userId());
             }
             userTripRepository.save(new UserTripEntity(userEntity.get(),
                 TE,
@@ -98,7 +98,7 @@ public class TripService {
     public List<Trip> getTrajetByUser(Integer userid) {
         Optional<List<UserTripEntity>> trip = userTripRepository.findByUserId(userid);
         if(trip.isEmpty()) {
-            throw  new RuntimeException("No trip found");
+            throw  new TripNotFoundException(userid);
         }
         return trip.get().stream()
                 .map(userTripEntity -> convert(userTripEntity.getTrip(), List.of(userTripEntity)))
