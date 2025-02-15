@@ -1,4 +1,4 @@
-# Willimath API
+# EmMEUHnez-moi API
 
 Ce projet est une API REST développée avec Spring Boot en Java et Maven. La base de données est déployée via Docker à l'aide d'un fichier `docker-compose`.
 
@@ -8,7 +8,7 @@ Ce projet est une API REST développée avec Spring Boot en Java et Maven. La ba
 
 Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur votre machine :
 
-- **Java 21** ou une version compatible
+- **Java 23** ou une version compatible
 - **Docker** et **Docker Compose**
 
 ---
