@@ -25,7 +25,7 @@ public class SearchService {
     private UserService userService;
 
     public User getUserByName(String name) {
-        Optional<UserEntity> userEntity =  userRepository.findByName(name);
+        Optional<UserEntity> userEntity =  userRepository.findByNameIgnoreCase(name);
         if(userEntity.isEmpty()) {
             throw new UserNotFoundException(name);
         }

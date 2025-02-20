@@ -1,6 +1,7 @@
 package com.willimath.api.service;
 
 import com.willimath.api.model.Role;
+import com.willimath.api.model.User;
 import com.willimath.api.model.UserFromTrip;
 import com.willimath.api.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +74,40 @@ public class TripService {
                 tripEntity.get().getNumber_of_seats(),
                 userService.getDriverFromTrip(tripId)
         );
+    }
+
+    public List<User> getPassagersByTrajet(Integer tripId) {
+        Optional<List<UserTripEntity>> userTripEntity = userTripRepository.findByTripId(tripId);
+        if(userTripEntity.isEmpty()) {
+            throw new UserNotFoundException(tripId);
+        }
+        return userTripEntity.get().stream()
+                .map(userTrip -> new User(
+                        userTrip.getUser().getId(),
+                        userTrip.getUser().getName(),
+                        userTrip.getUser().getSurname(),
+                        userTrip.getUser().getEmail()
+                ))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    public void addPassagerToTrajet(Integer tripId, Integer userId) {
+        Optional<TripEntity> tripEntity = tripRepository.findById(tripId);
+        if(tripEntity.isEmpty()) {
+            throw new TripNotFoundException(tripId);
+        }
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if(userEntity.isEmpty()) {
+            throw new UserNotFoundException(userId);
+        }
+        Optional<RoleEntity> roleEntity = roleRepository.findByName("Passager");
+        if(roleEntity.isEmpty()) {
+            throw new RoleNotFoundException("Passager");
+        }
+        userTripRepository.save(new UserTripEntity(
+            userEntity.get(),
+            tripEntity.get(),
+            roleEntity.get()
+        ));
     }
 }

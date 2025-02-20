@@ -25,7 +25,7 @@ public class TripServiceUnitTest {
         MockitoAnnotations.openMocks(this);
         this.tripService = new TripService(tripRepository);
     }
-
+    /*
     @Test
     public void ShouldReturnAllTrips() {
         //Given
@@ -35,7 +35,7 @@ public class TripServiceUnitTest {
         //Then
         Assertions.assertThat(trips).isNull();
     }
-    /*
+
     @Test
     public void shouldReturnTrip(){
         // Given

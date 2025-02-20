@@ -4,6 +4,7 @@ import com.willimath.api.model.User;
 import com.willimath.api.data.UserEntity;
 import com.willimath.api.data.UserEntityList;
 import com.willimath.api.data.UserRepository;
+import com.willimath.api.model.UserDetails;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,9 +34,9 @@ public class UserServiceUnitTest {
         Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(UserEntityList.ALICE));
 
         // When
-        User retrievedUser = userService.getUserById(id);
+        UserDetails retrievedUser = userService.getUserById(id);
 
         // Then
-        Assertions.assertThat(retrievedUser.email()).isEqualTo("alice.dupont@example.com");
+        Assertions.assertThat(retrievedUser.email()).isEqualTo(UserEntityList.ALICE.getEmail());
     }
 }

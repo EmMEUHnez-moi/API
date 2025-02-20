@@ -2,10 +2,7 @@ package com.willimath.api.service;
 
 import com.willimath.api.data.UserTripEntity;
 import com.willimath.api.data.UserTripRepository;
-import com.willimath.api.model.Role;
-import com.willimath.api.model.User;
-import com.willimath.api.model.UserFromTrip;
-import com.willimath.api.model.UserToSave;
+import com.willimath.api.model.*;
 import com.willimath.api.data.UserEntity;
 import com.willimath.api.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,21 +41,25 @@ public class UserService {
             user.name(),
             user.surname(),
             user.email(),
-            user.password()
+            user.password(),
+            user.birth_date(),
+            user.phone_number()
         ));
         return user;
     }
 
-    public User getUserById(Integer userId) {
+    public UserDetails getUserById(Integer userId) {
         Optional<UserEntity> userEntity = userRepository.findById(userId);
         if(userEntity.isEmpty()) {
             throw new UserNotFoundException(userId);
         }
-        return new User(
+        return new UserDetails(
                 userEntity.get().getId(),
                 userEntity.get().getName(),
                 userEntity.get().getSurname(),
-                userEntity.get().getEmail()
+                userEntity.get().getEmail(),
+                userEntity.get().getBirth_date(),
+                userEntity.get().getPhone_number()
         );
     }
 
@@ -77,10 +78,16 @@ public class UserService {
 
     public User getDriverFromTrip(Integer tripId) {
         List<UserFromTrip> users = getUsersFromTrip(tripId);
-        return users.stream()
+        UserDetails driver = users.stream()
                 .filter(user -> user.role().name().equals("Driver"))
                 .map(user -> getUserById(user.userId()))
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException(tripId));
+        return new User(
+                driver.id(),
+                driver.name(),
+                driver.surname(),
+                driver.email()
+        );
     }
 }

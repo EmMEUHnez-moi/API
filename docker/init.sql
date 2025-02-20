@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS public.user (
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    birthdate DATE NOT NULL,
+    phone_number VARCHAR(10) NOT NULL
 );
 
 CREATE SEQUENCE IF NOT EXISTS role_id_seq;
@@ -52,10 +54,10 @@ ALTER TABLE public.trip OWNER TO postgres;
 ALTER TABLE public.user_trip OWNER TO postgres;
 
 -- Insertions pour la table "user"
-INSERT INTO public.user (name, surname, email, password) VALUES
-    ('Alice', 'Dupont', 'alice.dupont@example.com', 'password123'),
-    ('Bob', 'Martin', 'bob.martin@example.com', 'securepass'),
-    ('Charlie', 'Durand', 'charlie.durand@example.com', 'mypassword');
+INSERT INTO public.user (name, surname, email, password, birthdate, phone_number) VALUES
+    ('Alice', 'Dupont', 'alice.dupont@example.com', 'password123',TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789'),
+    ('Bob', 'Martin', 'bob.martin@example.com', 'securepass', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0987654321'),
+    ('Charlie', 'Durand', 'charlie.durand@example.com', 'mypassword', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789');
 
 -- Insertions pour la table "role"
 INSERT INTO public.role (name) VALUES

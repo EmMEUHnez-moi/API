@@ -1,6 +1,7 @@
 package com.willimath.api.web;
 
 import com.willimath.api.model.User;
+import com.willimath.api.model.UserDetails;
 import com.willimath.api.model.UserToSave;
 import com.willimath.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +50,7 @@ public class UserController {
 
     })
     @GetMapping("/{user_id}")
-    public User getUser(@PathVariable("user_id") Integer user_id) {
+    public UserDetails getUser(@PathVariable("user_id") Integer user_id) {
         return userService.getUserById(user_id);
     }
 }
