@@ -15,28 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "user", description = "the user")
+@Tag(name = "User", description = "The User API")
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Operation(summary = "Returns a user", description = "Returns a user")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns a user",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class))}),
-            @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Error.class)))
-
-    })
-    @GetMapping
-    public List<User> getAllUser() {
-        return userService.getAllUsers();
-    }
 
     @Operation(summary = "Create a user", description = "Create a user")
     @ApiResponses(value = {

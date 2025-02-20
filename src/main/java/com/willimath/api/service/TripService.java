@@ -22,6 +22,9 @@ public class TripService {
     private UserTripRepository userTripRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -39,19 +42,6 @@ public class TripService {
         return userTrip.get();
     }
 
-    public List<Trip> getTrajet(String villedepart, String villearrivee, String date) {
-        Optional<List<TripEntity>> trip = tripRepository.findByLocationAndStart_date(
-                villedepart,
-                villearrivee,
-                LocalDate.parse(date));
-        if(trip.isEmpty()) {
-            throw  new TripNotFoundException(villedepart, villearrivee, date);
-        }
-        return trip.get().stream()
-                .map(tripEntity -> convert(tripEntity, getUserFromTrip(tripEntity)))
-                .toList();
-    }
-
     public Trip createTrajet(Trip trip) {
         TripEntity TE = tripRepository.save(new TripEntity(
             trip.from_location(),
@@ -63,52 +53,25 @@ public class TripService {
             trip.price(),
             trip.number_of_seats()
         ));
-        for (UserFromTrip user : trip.people()) {
-            Optional<UserEntity> userEntity = userRepository.findById(user.userId());
-            if(userEntity.isEmpty()) {
-                throw new UserNotFoundException(user.userId());
-            }
-            userTripRepository.save(new UserTripEntity(userEntity.get(),
-                TE,
-                roleRepository.findByName(user.role().name()).get()
-            ));
-        }
         return trip;
     }
 
-    private Trip convert(TripEntity tripentiry, List<UserTripEntity> people) {
-        return new Trip(
-                tripentiry.getFrom_location(),
-                tripentiry.getTo_location(),
-                tripentiry.getStart_date(),
-                tripentiry.getEnd_date(),
-                tripentiry.getHour_of_departure(),
-                tripentiry.getHour_of_arrival(),
-                tripentiry.getPrice(),
-                tripentiry.getNumber_of_seats(),
-                people.stream()
-                        .map(userTripEntity -> new UserFromTrip(
-                                userTripEntity.getUser().getId(),
-                                new Role(userTripEntity.getRole().getName())
-                        )
-                ).toList()
-        );
-    }
-
-    public List<Trip> getTrajetByUser(Integer userid) {
-        Optional<List<UserTripEntity>> trip = userTripRepository.findByUserId(userid);
-        if(trip.isEmpty()) {
-            throw  new TripNotFoundException(userid);
+    public Trip getTrajetById(Integer tripId) {
+        Optional<TripEntity> tripEntity = tripRepository.findById(tripId);
+        if(tripEntity.isEmpty()) {
+            throw new TripNotFoundException(tripId);
         }
-        return trip.get().stream()
-                .map(userTripEntity -> convert(userTripEntity.getTrip(), List.of(userTripEntity)))
-                .toList();
-
-    }
-
-    public List<Trip> getAllTrajets() {
-        return tripRepository.findAll().stream()
-                .map(tripEntity -> convert(tripEntity, getUserFromTrip(tripEntity)))
-                .toList();
+        return new Trip(
+                tripEntity.get().getId(),
+                tripEntity.get().getFrom_location(),
+                tripEntity.get().getTo_location(),
+                tripEntity.get().getStart_date(),
+                tripEntity.get().getEnd_date(),
+                tripEntity.get().getHour_of_departure(),
+                tripEntity.get().getHour_of_arrival(),
+                tripEntity.get().getPrice(),
+                tripEntity.get().getNumber_of_seats(),
+                userService.getDriverFromTrip(tripId)
+        );
     }
 }

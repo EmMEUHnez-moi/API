@@ -1,6 +1,10 @@
 package com.willimath.api.service;
 
+import com.willimath.api.data.UserTripEntity;
+import com.willimath.api.data.UserTripRepository;
+import com.willimath.api.model.Role;
 import com.willimath.api.model.User;
+import com.willimath.api.model.UserFromTrip;
 import com.willimath.api.model.UserToSave;
 import com.willimath.api.data.UserEntity;
 import com.willimath.api.data.UserRepository;
@@ -16,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserTripRepository userTripRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -53,5 +60,27 @@ public class UserService {
                 userEntity.get().getSurname(),
                 userEntity.get().getEmail()
         );
+    }
+
+    private List<UserFromTrip> getUsersFromTrip(Integer tripId) {
+        Optional<List<UserTripEntity>> userTripEntity = userTripRepository.findByTripId(tripId);
+        if(userTripEntity.isEmpty()) {
+            throw new UserNotFoundException(tripId);
+        }
+        return userTripEntity.get().stream()
+                .map(userTrip -> new UserFromTrip(
+                        userTrip.getUser().getId(),
+                        new Role(userTrip.getRole().getName())
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public User getDriverFromTrip(Integer tripId) {
+        List<UserFromTrip> users = getUsersFromTrip(tripId);
+        return users.stream()
+                .filter(user -> user.role().name().equals("Driver"))
+                .map(user -> getUserById(user.userId()))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException(tripId));
     }
 }
