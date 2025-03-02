@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 docker/postgres-data
+docker/keycloak-data
 
 ### STS ###
 .apt_generated

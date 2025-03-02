@@ -3,7 +3,8 @@ package com.willimath.api.data;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "public")
@@ -30,6 +31,14 @@ public class UserEntity {
 
     @Column(name = "phone_number")
     private String phone_number;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_access_role",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "access_role_id", referencedColumnName = "id")}
+    )
+    private Set<AccessRoleEntity> roles = new HashSet<>();
 
     public UserEntity() {
     }
@@ -103,5 +112,13 @@ public class UserEntity {
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
+    }
+
+    public Set<AccessRoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<AccessRoleEntity> roles) {
+        this.roles = roles;
     }
 }

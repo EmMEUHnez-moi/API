@@ -1,7 +1,5 @@
 package com.willimath.api.service;
 
-import com.willimath.api.model.User;
-import com.willimath.api.data.UserEntity;
 import com.willimath.api.data.UserEntityList;
 import com.willimath.api.data.UserRepository;
 import com.willimath.api.model.UserDetails;

@@ -1,15 +1,12 @@
 package com.willimath.api.service;
 
-import com.willimath.api.model.Role;
-import com.willimath.api.model.User;
-import com.willimath.api.model.UserFromTrip;
 import com.willimath.api.data.*;
+import com.willimath.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.willimath.api.model.Trip;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 

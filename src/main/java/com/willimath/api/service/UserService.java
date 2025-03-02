@@ -2,9 +2,9 @@ package com.willimath.api.service;
 
 import com.willimath.api.data.UserTripEntity;
 import com.willimath.api.data.UserTripRepository;
-import com.willimath.api.model.*;
 import com.willimath.api.data.UserEntity;
 import com.willimath.api.data.UserRepository;
+import com.willimath.api.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

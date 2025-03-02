@@ -52,18 +52,22 @@ ALTER TABLE public.user OWNER TO postgres;
 ALTER TABLE public.role OWNER TO postgres;
 ALTER TABLE public.trip OWNER TO postgres;
 ALTER TABLE public.user_trip OWNER TO postgres;
+ALTER TABLE public.access_role OWNER TO postgres;
+ALTER TABLE public.user_access_role OWNER TO postgres;
 
 -- Insertions pour la table "user"
+-- password123
+-- securepass
+-- mypassword
 INSERT INTO public.user (name, surname, email, password, birthdate, phone_number) VALUES
-    ('Alice', 'Dupont', 'alice.dupont@example.com', 'password123',TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789'),
-    ('Bob', 'Martin', 'bob.martin@example.com', 'securepass', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0987654321'),
-    ('Charlie', 'Durand', 'charlie.durand@example.com', 'mypassword', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789');
+    ('Alice', 'Dupont', 'alice.dupont@example.com', '$2y$10$B0wxSMV1QQVJ80zOme.n9.PpJNuIuxFIGXy9OxLzMgRGHB3hCZiZK',TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789'),
+    ('Bob', 'Martin', 'bob.martin@example.com', '$2y$10$xJGnSg85tJnxe/nxH0WEl.XFq5FcFg.kKwX6luz3vu7bS2XyJfoce', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0987654321'),
+    ('Charlie', 'Durand', 'charlie.durand@example.com', '$2y$10$B2OcrMtOqjUn2XEoVJpp0uRcErLCncsmKYDho0/lnsEcuHo1j/JWe', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789');
 
 -- Insertions pour la table "role"
 INSERT INTO public.role (name) VALUES
     ('Driver'),
-    ('Passenger'),
-    ('Admin');
+    ('Passenger');
 
 -- Insertions pour la table "trip"
 INSERT INTO public.trip (from_location, to_location, start_date, end_date, hour_of_departure, hour_of_arrival, price, number_of_seats) VALUES
@@ -78,6 +82,3 @@ INSERT INTO public.user_trip (user_id, trip_id, role_id) VALUES
     (3, 2, 1), -- Charlie est le conducteur du deuxième trajet
     (2, 2, 2), -- Bob est un passager du deuxième trajet
     (1, 3, 2); -- Alice est un passager du troisième trajet
-
-
-
