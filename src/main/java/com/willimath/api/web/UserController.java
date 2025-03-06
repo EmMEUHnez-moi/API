@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +27,12 @@ import java.util.UUID;
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "Create a user", description = "Create a user", security = {@SecurityRequirement(name = "bearerAuth")})
+    @Operation(summary = "Create a user", description = "Create a user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Create a user",
                     content = {@Content(mediaType = "application/json",
@@ -55,6 +59,7 @@ public class UserController {
     })
     @GetMapping("/{user_id}")
     public UserDetails getUser(@PathVariable("user_id") UUID user_id) {
+        log.info("Get user with id {}", user_id);
         return userService.getUserById(user_id);
     }
 

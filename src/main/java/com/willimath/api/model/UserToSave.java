@@ -12,7 +12,6 @@ public record UserToSave(
         @NotBlank(message = "Email is mandatory") String email,
         @NotBlank(message = "Password is mandatory") String password,
         @Schema(type = "string", format = "date", example = "yyyy-MM-dd")
-        @NotBlank(message = "Birth date is mandatory")
         @PastOrPresent(message = "Birth date must be present or past")
         LocalDate birth_date,
         @NotBlank(message = "Phone number is mandatory") String phone_number
