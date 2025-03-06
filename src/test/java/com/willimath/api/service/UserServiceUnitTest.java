@@ -11,6 +11,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
+import java.util.UUID;
+
+import static java.util.UUID.fromString;
 
 public class UserServiceUnitTest {
 
@@ -28,7 +31,7 @@ public class UserServiceUnitTest {
     @Test
     public void shouldReturnUser(){
         // Given
-        Integer id = 1;
+        UUID id = fromString("3721a1db-14ec-49f1-8f84-fc408b0f0918");
         Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(UserEntityList.ALICE));
 
         // When

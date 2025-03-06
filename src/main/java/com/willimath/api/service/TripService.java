@@ -2,6 +2,8 @@ package com.willimath.api.service;
 
 import com.willimath.api.data.*;
 import com.willimath.api.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Service
 public class TripService {
 
+    private static final Logger log = LoggerFactory.getLogger(TripService.class);
     @Autowired
     private TripRepository tripRepository;
 
@@ -42,6 +45,7 @@ public class TripService {
     }
 
     public Trip createTrajet(Trip trip) {
+        log.info("Invoking createTrajet with trip={}",trip);
         TripEntity TE = tripRepository.save(new TripEntity(
             trip.from_location(),
             trip.to_location(),
@@ -56,8 +60,10 @@ public class TripService {
     }
 
     public Trip getTrajetById(Integer tripId) {
+        log.info("Invoking getTrajetById with tripId={}",tripId);
         Optional<TripEntity> tripEntity = tripRepository.findById(tripId);
         if(tripEntity.isEmpty()) {
+            log.warn("Could not find trip with tripId={}",tripId);
             throw new TripNotFoundException(tripId);
         }
         return new Trip(
@@ -75,8 +81,10 @@ public class TripService {
     }
 
     public List<User> getPassagersByTrajet(Integer tripId) {
+        log.info("Invoking getPassagersByTrajet with tripId={}",tripId);
         Optional<List<UserTripEntity>> userTripEntity = userTripRepository.findByTripId(tripId);
         if(userTripEntity.isEmpty()) {
+            log.warn("Could not find trip with tripId={}",tripId);
             throw new TripNotFoundException(tripId);
         }
         return userTripEntity.get().stream()
@@ -90,16 +98,20 @@ public class TripService {
     }
 
     public void addPassagerToTrajet(Integer tripId, UUID userId) {
+        log.info("Invoking addPassagerToTrajet with tripId={} and userId={}",tripId,userId);
         Optional<TripEntity> tripEntity = tripRepository.findById(tripId);
         if(tripEntity.isEmpty()) {
+            log.warn("Cannot find trip with tripId={}",tripId);
             throw new TripNotFoundException(tripId);
         }
         Optional<UserEntity> userEntity = userRepository.findById(userId);
         if(userEntity.isEmpty()) {
+            log.warn("Cannot find user with userId={}",userId);
             throw new UserNotFoundException(userId);
         }
         Optional<RoleEntity> roleEntity = roleRepository.findByName("Passager");
         if(roleEntity.isEmpty()) {
+            log.warn("Cannot find role");
             throw new RoleNotFoundException("Passager");
         }
         userTripRepository.save(new UserTripEntity(

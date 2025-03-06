@@ -54,9 +54,9 @@ ALTER TABLE public.user_trip OWNER TO postgres;
 -- securepass
 -- mypassword
 INSERT INTO public.user (id, name, surname, email, birthdate, phone_number) VALUES
-    ('4ace6483-98d7-44d0-b6d8-89682fdaa014'::UUID,'Alice', 'Dupont', 'alice.dupont@example.com',TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789'),
-    ('22ef6ab5-c1f3-4ca7-a4bb-14898a8dafc5'::UUID,'Bob', 'Martin', 'bob.martin@example.com', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0987654321'),
-    ('99d99ed2-3c65-4407-940b-340f76955473'::UUID,'Charlie', 'Durand', 'charlie.durand@example.com', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789');
+    ('3721a1db-14ec-49f1-8f84-fc408b0f0918'::UUID,'Alice', 'Dupont', 'alice.dupont@example.com',TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789'),
+    ('71937ac2-fc5f-45f5-9ce4-87191460786f'::UUID,'Bob', 'Martin', 'bob.martin@example.com', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0987654321'),
+    ('b2643f62-4b38-4ce1-8fb9-ba6f7b7e7a1e'::UUID,'Charlie', 'Durand', 'charlie.durand@example.com', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789');
 
 -- Insertions pour la table "role"
 INSERT INTO public.role (name) VALUES
@@ -71,10 +71,10 @@ INSERT INTO public.trip (from_location, to_location, start_date, end_date, hour_
 
 -- Insertions pour la table "user_trip"
 INSERT INTO public.user_trip (user_id, trip_id, role_id) VALUES
-    ('4ace6483-98d7-44d0-b6d8-89682fdaa014'::UUID, 1, 1), -- Alice est le conducteur du premier trajet
-    ('22ef6ab5-c1f3-4ca7-a4bb-14898a8dafc5'::UUID, 1, 2), -- Bob est un passager du premier trajet
-    ('99d99ed2-3c65-4407-940b-340f76955473'::UUID, 2, 1), -- Charlie est le conducteur du deuxième trajet
-    ('22ef6ab5-c1f3-4ca7-a4bb-14898a8dafc5'::UUID, 2, 2), -- Bob est un passager du deuxième trajet
-    ('4ace6483-98d7-44d0-b6d8-89682fdaa014'::UUID, 3, 2); -- Alice est un passager du troisième trajet
+    ('3721a1db-14ec-49f1-8f84-fc408b0f0918'::UUID, 1, 1), -- Alice est le conducteur du premier trajet
+    ('71937ac2-fc5f-45f5-9ce4-87191460786f'::UUID, 1, 2), -- Bob est un passager du premier trajet
+    ('b2643f62-4b38-4ce1-8fb9-ba6f7b7e7a1e'::UUID, 2, 1), -- Charlie est le conducteur du deuxième trajet
+    ('71937ac2-fc5f-45f5-9ce4-87191460786f'::UUID, 2, 2), -- Bob est un passager du deuxième trajet
+    ('3721a1db-14ec-49f1-8f84-fc408b0f0918'::UUID, 3, 2); -- Alice est un passager du troisième trajet
 
 CREATE SCHEMA IF NOT EXISTS keycloak;
