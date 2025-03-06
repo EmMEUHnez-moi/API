@@ -6,12 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByEmail(String email);
     Optional<UserEntity> findByNameIgnoreCase(String name);
-
-    @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.email = :email")
-    Optional<UserEntity> findOneWithRolesByEmailIgnoreCase(String email);
 }

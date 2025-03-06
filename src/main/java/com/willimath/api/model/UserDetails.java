@@ -1,9 +1,10 @@
 package com.willimath.api.model;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record UserDetails(
-        Integer id,
+        UUID id,
         String name,
         String surname,
         String email,

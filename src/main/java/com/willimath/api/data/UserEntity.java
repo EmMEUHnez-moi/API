@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "user", schema = "public")
@@ -12,7 +13,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private UUID id;
 
     @Column(name = "name")
     private String name;
@@ -32,14 +33,6 @@ public class UserEntity {
     @Column(name = "phone_number")
     private String phone_number;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_access_role",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "access_role_id", referencedColumnName = "id")}
-    )
-    private Set<AccessRoleEntity> roles = new HashSet<>();
-
     public UserEntity() {
     }
 
@@ -52,7 +45,7 @@ public class UserEntity {
         this.phone_number = phone_number;
     }
 
-    public UserEntity(Integer id, String name, String surname, String email, String password, LocalDate birth_date, String phone_number) {
+    public UserEntity(UUID id, String name, String surname, String email, String password, LocalDate birth_date, String phone_number) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -62,7 +55,7 @@ public class UserEntity {
         this.phone_number = phone_number;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -112,13 +105,5 @@ public class UserEntity {
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
-    }
-
-    public Set<AccessRoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<AccessRoleEntity> roles) {
-        this.roles = roles;
     }
 }

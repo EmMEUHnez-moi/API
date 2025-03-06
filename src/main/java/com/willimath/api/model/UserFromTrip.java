@@ -1,7 +1,9 @@
 package com.willimath.api.model;
 
+import java.util.UUID;
+
 public record UserFromTrip(
-        Integer userId,
+        UUID userId,
         Role role
 ) {
 }

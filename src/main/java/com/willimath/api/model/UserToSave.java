@@ -16,6 +16,5 @@ public record UserToSave(
         @PastOrPresent(message = "Birth date must be present or past")
         LocalDate birth_date,
         @NotBlank(message = "Phone number is mandatory") String phone_number
-        // Date de naissance, numéro de téléphone, (genre)
 ) {
 }

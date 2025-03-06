@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +49,7 @@ public class UserService {
         return user;
     }
 
-    public UserDetails getUserById(Integer userId) {
+    public UserDetails getUserById(UUID userId) {
         Optional<UserEntity> userEntity = userRepository.findById(userId);
         if(userEntity.isEmpty()) {
             throw new UserNotFoundException(userId);
@@ -66,7 +67,7 @@ public class UserService {
     private List<UserFromTrip> getUsersFromTrip(Integer tripId) {
         Optional<List<UserTripEntity>> userTripEntity = userTripRepository.findByTripId(tripId);
         if(userTripEntity.isEmpty()) {
-            throw new UserNotFoundException(tripId);
+            throw new TripNotFoundException(tripId);
         }
         return userTripEntity.get().stream()
                 .map(userTrip -> new UserFromTrip(
@@ -82,12 +83,20 @@ public class UserService {
                 .filter(user -> user.role().name().equals("Driver"))
                 .map(user -> getUserById(user.userId()))
                 .findFirst()
-                .orElseThrow(() -> new UserNotFoundException(tripId));
+                .orElseThrow(() -> new TripNotFoundException(tripId));
         return new User(
                 driver.id(),
                 driver.name(),
                 driver.surname(),
                 driver.email()
         );
+    }
+
+    public void deleteUser(UUID userId) {
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if(userEntity.isEmpty()) {
+            throw new UserNotFoundException(userId);
+        }
+        userRepository.delete(userEntity.get());
     }
 }

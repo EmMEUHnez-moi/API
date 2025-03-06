@@ -9,6 +9,7 @@ import com.willimath.api.model.Trip;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TripService {
@@ -76,7 +77,7 @@ public class TripService {
     public List<User> getPassagersByTrajet(Integer tripId) {
         Optional<List<UserTripEntity>> userTripEntity = userTripRepository.findByTripId(tripId);
         if(userTripEntity.isEmpty()) {
-            throw new UserNotFoundException(tripId);
+            throw new TripNotFoundException(tripId);
         }
         return userTripEntity.get().stream()
                 .map(userTrip -> new User(
@@ -88,7 +89,7 @@ public class TripService {
                 .collect(java.util.stream.Collectors.toList());
     }
 
-    public void addPassagerToTrajet(Integer tripId, Integer userId) {
+    public void addPassagerToTrajet(Integer tripId, UUID userId) {
         Optional<TripEntity> tripEntity = tripRepository.findById(tripId);
         if(tripEntity.isEmpty()) {
             throw new TripNotFoundException(tripId);

@@ -5,24 +5,30 @@ import com.willimath.api.model.UserDetails;
 import com.willimath.api.model.UserToSave;
 import com.willimath.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Tag(name = "User", description = "The User API")
 @RestController
 @RequestMapping("/user")
+@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "Create a user", description = "Create a user")
+    @Operation(summary = "Create a user", description = "Create a user", security = {@SecurityRequirement(name = "bearerAuth")})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Create a user",
                     content = {@Content(mediaType = "application/json",
@@ -37,7 +43,7 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    @Operation(summary = "Returns a user", description = "Returns a user")
+    @Operation(summary = "Returns a user", description = "Returns a user", security = {@SecurityRequirement(name = "bearerAuth")})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns a user",
                     content = {@Content(mediaType = "application/json",
@@ -48,7 +54,13 @@ public class UserController {
 
     })
     @GetMapping("/{user_id}")
-    public UserDetails getUser(@PathVariable("user_id") Integer user_id) {
+    public UserDetails getUser(@PathVariable("user_id") UUID user_id) {
         return userService.getUserById(user_id);
+    }
+
+    @Operation(summary = "Delete a user", description = "Delete a user", security = {@SecurityRequirement(name = "bearerAuth")})
+    @DeleteMapping("/{user_id}")
+    public void deleteUser(@PathVariable("user_id") UUID user_id) {
+        userService.deleteUser(user_id);
     }
 }
