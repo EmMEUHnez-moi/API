@@ -38,6 +38,7 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
+        log.info("Invoking getAllUsers");
         return userRepository.findAll().stream()
                 .map(userEntity -> new User(
                         userEntity.getId(),
@@ -49,6 +50,7 @@ public class UserService {
     }
 
     public UserToSave createUser(UserToSave user) {
+        log.info("Invoking createUser with userToSave={}",user);
         UUID userId= adminAuthentificationService.createUser(user);
         userRepository.save(new UserEntity(
                 userId,
@@ -62,6 +64,7 @@ public class UserService {
     }
 
     public UserDetails getUserById(UUID userId) {
+        log.info("Invoking getUserById with userId={}",userId);
         try {
             Optional<UserEntity> userEntity = userRepository.findById(userId);
             if(userEntity.isEmpty()) {
@@ -83,8 +86,10 @@ public class UserService {
     }
 
     private List<UserFromTrip> getUsersFromTrip(Integer tripId) {
+        log.info("Invoking getUsersFromTrip with tripId={}",tripId);
         Optional<List<UserTripEntity>> userTripEntity = userTripRepository.findByTripId(tripId);
         if(userTripEntity.isEmpty()) {
+            log.warn("Cannot find trip with tripId={}",tripId);
             throw new TripNotFoundException(tripId);
         }
         return userTripEntity.get().stream()
@@ -96,6 +101,7 @@ public class UserService {
     }
 
     public User getDriverFromTrip(Integer tripId) {
+        log.info("Invoking getDriverFromTrip with tripId={}",tripId);
         List<UserFromTrip> users = getUsersFromTrip(tripId);
         UserDetails driver = users.stream()
                 .filter(user -> user.role().name().equals("Driver"))
@@ -111,8 +117,10 @@ public class UserService {
     }
 
     public void deleteUser(UUID userId) {
+        log.info("Invoking deleteUser with userId={}",userId);
         Optional<UserEntity> userEntity = userRepository.findById(userId);
         if(userEntity.isEmpty()) {
+            log.warn("Cannot find user with userId={}",userId);
             throw new UserNotFoundException(userId);
         }
         userRepository.deleteById(userId);
