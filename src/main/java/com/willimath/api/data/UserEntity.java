@@ -12,7 +12,6 @@ import java.util.UUID;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
     @Column(name = "name")
@@ -24,9 +23,6 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "birthdate")
     private LocalDate birth_date;
 
@@ -36,21 +32,19 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(String name, String surname, String email, String password, LocalDate birth_date, String phone_number) {
+    public UserEntity(String name, String surname, String email, LocalDate birth_date, String phone_number) {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.password = password;
         this.birth_date = birth_date;
         this.phone_number = phone_number;
     }
 
-    public UserEntity(UUID id, String name, String surname, String email, String password, LocalDate birth_date, String phone_number) {
+    public UserEntity(UUID id, String name, String surname, String email, LocalDate birth_date, String phone_number) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.password = password;
         this.birth_date = birth_date;
         this.phone_number = phone_number;
     }
@@ -81,14 +75,6 @@ public class UserEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public LocalDate getBirth_date() {

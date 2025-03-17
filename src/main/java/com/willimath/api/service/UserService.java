@@ -24,8 +24,16 @@ public class UserService {
 
     @Autowired
     private UserTripRepository userTripRepository;
+  
+    @Autowired
+    private AdminAuthentificationService adminAuthentificationService;
+  
+    public UserService(UserRepository userRepository, UserTripRepository userTripRepository) {
+        this.userRepository = userRepository;
+        this.userTripRepository = userTripRepository;
+    }
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
@@ -43,31 +51,38 @@ public class UserService {
 
     public UserToSave createUser(UserToSave user) {
         log.info("Invoking createUser with userToSave={}",user);
+        UUID userId= adminAuthentificationService.createUser(user);
         userRepository.save(new UserEntity(
-            user.name(),
-            user.surname(),
-            user.email(),
-            user.password(),
-            user.birth_date(),
-            user.phone_number()
+                userId,
+                user.name(),
+                user.surname(),
+                user.email(),
+                user.birth_date(),
+                user.phone_number()
         ));
         return user;
     }
 
     public UserDetails getUserById(UUID userId) {
         log.info("Invoking getUserById with userId={}",userId);
-        Optional<UserEntity> userEntity = userRepository.findById(userId);
-        if(userEntity.isEmpty()) {
-            throw new UserNotFoundException(userId);
+        try {
+            Optional<UserEntity> userEntity = userRepository.findById(userId);
+            if(userEntity.isEmpty()) {
+                throw new UserNotFoundException(userId);
+            }
+            return new UserDetails(
+                    userEntity.get().getId(),
+                    userEntity.get().getName(),
+                    userEntity.get().getSurname(),
+                    userEntity.get().getEmail(),
+                    userEntity.get().getBirth_date(),
+                    userEntity.get().getPhone_number()
+            );
         }
-        return new UserDetails(
-                userEntity.get().getId(),
-                userEntity.get().getName(),
-                userEntity.get().getSurname(),
-                userEntity.get().getEmail(),
-                userEntity.get().getBirth_date(),
-                userEntity.get().getPhone_number()
-        );
+        catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     private List<UserFromTrip> getUsersFromTrip(Integer tripId) {
@@ -108,6 +123,7 @@ public class UserService {
             log.warn("Cannot find user with userId={}",userId);
             throw new UserNotFoundException(userId);
         }
-        userRepository.delete(userEntity.get());
+        userRepository.deleteById(userId);
+        adminAuthentificationService.deleteUser(userId);
     }
 }

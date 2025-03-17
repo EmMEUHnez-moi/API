@@ -32,8 +32,9 @@ public class TripService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public TripService(TripRepository tripRepository) {
+    public TripService(TripRepository tripRepository, UserService userService) {
         this.tripRepository = tripRepository;
+        this.userService = userService;
     }
 
     private List<UserTripEntity> getUserFromTrip(TripEntity tripEntity) {
