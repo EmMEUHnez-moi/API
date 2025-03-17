@@ -18,14 +18,22 @@ public class TripServiceUnitTest {
     @Mock
     private TripRepository tripRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private UserTripRepository userTripRepository;
+
     private TripService tripService;
+    private UserService userService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.tripService = new TripService(tripRepository);
+        this.userService = new UserService(userRepository, userTripRepository);
+        this.tripService = new TripService(tripRepository, userService);
     }
-
+    /*
     @Test
     public void ShouldReturnAllTrips() {
         //Given
@@ -35,20 +43,25 @@ public class TripServiceUnitTest {
         //Then
         Assertions.assertThat(trips).isNull();
     }
-    /*
-    @Test
-    public void shouldReturnTrip(){
-        // Given
-        Integer id = 1;
-        Mockito.when(tripRepository.findById(id)).thenReturn(Optional.of(UserEntityList.ALICE));
-
-        // When
-        List<Trip> retrievedTrip = tripService.getTrajetByUser(id);
-
-        // Then
-        Assertions.assertThat(retrievedTrip).extracting(people).containsExactly();
-    }
 
  */
+
+    @Test
+    public void shouldReturnTrip(){
+
+        // Given
+        Integer id = 1;
+        Mockito.when(tripRepository.findById(id)).thenReturn((Optional.of(TripEntityList.PARIS)));
+        Mockito.when(userTripRepository.findByTripId(id)).thenReturn((Optional.of(UserTripEntityList.list)));
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(UserEntityList.ALICE));
+
+        // When
+        Trip retrievedTrip = tripService.getTrajetById(id);
+
+        // Then
+        Assertions.assertThat(retrievedTrip.to_location()).isEqualTo("Lyon");
+    }
+
+
 
 }
