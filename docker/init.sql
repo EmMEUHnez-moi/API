@@ -1,11 +1,10 @@
-CREATE SEQUENCE IF NOT EXISTS user_id_seq;
-
 CREATE TABLE IF NOT EXISTS public.user (
-    id INT PRIMARY KEY DEFAULT NEXTVAL('user_id_seq'),
+    id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    birthdate DATE NOT NULL,
+    phone_number VARCHAR(10) NOT NULL
 );
 
 CREATE SEQUENCE IF NOT EXISTS role_id_seq;
@@ -33,7 +32,7 @@ CREATE SEQUENCE IF NOT EXISTS user_trip_id_seq;
 
 CREATE TABLE IF NOT EXISTS public.user_trip (
     id INT PRIMARY KEY DEFAULT NEXTVAL('user_trip_id_seq'),
-    user_id INT NOT NULL,
+    user_id UUID NOT NULL,
     trip_id INT NOT NULL,
     role_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES public.user(id),
@@ -41,7 +40,6 @@ CREATE TABLE IF NOT EXISTS public.user_trip (
     FOREIGN KEY (role_id) REFERENCES public.role(id)
 );
 
-ALTER SEQUENCE user_id_seq OWNED BY public.user.id;
 ALTER SEQUENCE role_id_seq OWNED BY public.role.id;
 ALTER SEQUENCE trip_id_seq OWNED BY public.trip.id;
 ALTER SEQUENCE user_trip_id_seq OWNED BY public.user_trip.id;
@@ -52,16 +50,18 @@ ALTER TABLE public.trip OWNER TO postgres;
 ALTER TABLE public.user_trip OWNER TO postgres;
 
 -- Insertions pour la table "user"
-INSERT INTO public.user (name, surname, email, password) VALUES
-    ('Alice', 'Dupont', 'alice.dupont@example.com', 'password123'),
-    ('Bob', 'Martin', 'bob.martin@example.com', 'securepass'),
-    ('Charlie', 'Durand', 'charlie.durand@example.com', 'mypassword');
+-- password123
+-- securepass
+-- mypassword
+INSERT INTO public.user (id, name, surname, email, birthdate, phone_number) VALUES
+    ('b156e072-19c6-4830-a109-a68351d20a57'::UUID,'Alice', 'Dupont', 'alice.dupont@example.com',TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789'),
+    ('c86f65de-e550-437c-9ccb-93981a454fcb'::UUID,'Bob', 'Martin', 'bob.martin@example.com', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0987654321'),
+    ('34c82e4c-2d28-4495-9b3a-642a808a4be0'::UUID,'Charlie', 'Durand', 'charlie.durand@example.com', TO_DATE('1995-05-05', 'YYYY-MM-DD'), '0123456789');
 
 -- Insertions pour la table "role"
 INSERT INTO public.role (name) VALUES
     ('Driver'),
-    ('Passenger'),
-    ('Admin');
+    ('Passenger');
 
 -- Insertions pour la table "trip"
 INSERT INTO public.trip (from_location, to_location, start_date, end_date, hour_of_departure, hour_of_arrival, price, number_of_seats) VALUES
@@ -71,11 +71,10 @@ INSERT INTO public.trip (from_location, to_location, start_date, end_date, hour_
 
 -- Insertions pour la table "user_trip"
 INSERT INTO public.user_trip (user_id, trip_id, role_id) VALUES
-    (1, 1, 1), -- Alice est le conducteur du premier trajet
-    (2, 1, 2), -- Bob est un passager du premier trajet
-    (3, 2, 1), -- Charlie est le conducteur du deuxième trajet
-    (2, 2, 2), -- Bob est un passager du deuxième trajet
-    (1, 3, 2); -- Alice est un passager du troisième trajet
+    ('b156e072-19c6-4830-a109-a68351d20a57'::UUID, 1, 1), -- Alice est le conducteur du premier trajet
+    ('c86f65de-e550-437c-9ccb-93981a454fcb'::UUID, 1, 2), -- Bob est un passager du premier trajet
+    ('34c82e4c-2d28-4495-9b3a-642a808a4be0'::UUID, 2, 1), -- Charlie est le conducteur du deuxième trajet
+    ('c86f65de-e550-437c-9ccb-93981a454fcb'::UUID, 2, 2), -- Bob est un passager du deuxième trajet
+    ('b156e072-19c6-4830-a109-a68351d20a57'::UUID, 3, 2); -- Alice est un passager du troisième trajet
 
-
-
+CREATE SCHEMA IF NOT EXISTS keycloak;

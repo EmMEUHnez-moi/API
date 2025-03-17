@@ -1,17 +1,9 @@
 package com.willimath.api.service;
 
-import com.willimath.api.model.Trip;
-import com.willimath.api.model.User;
-import com.willimath.api.data.*;
-import org.assertj.core.api.Assertions;
+import com.willimath.api.data.TripRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import java.util.List;
-import java.util.Optional;
 
 public class TripServiceUnitTest {
 
@@ -43,7 +35,6 @@ public class TripServiceUnitTest {
         //Then
         Assertions.assertThat(trips).isNull();
     }
-
  */
 
     @Test

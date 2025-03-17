@@ -1,7 +1,5 @@
 package com.willimath.api.service;
 
-import com.willimath.api.model.User;
-
 public class TripNotFoundException extends RuntimeException {
     public TripNotFoundException(Integer userid) {
         super("Trip with user "+ userid + " could not be found");

@@ -1,16 +1,15 @@
 package com.willimath.api.service;
 
-import com.willimath.api.model.Role;
-import com.willimath.api.model.UserFromTrip;
 import com.willimath.api.data.*;
+import com.willimath.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.willimath.api.model.Trip;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TripService {
@@ -74,5 +73,40 @@ public class TripService {
                 tripEntity.get().getNumber_of_seats(),
                 userService.getDriverFromTrip(tripId)
         );
+    }
+
+    public List<User> getPassagersByTrajet(Integer tripId) {
+        Optional<List<UserTripEntity>> userTripEntity = userTripRepository.findByTripId(tripId);
+        if(userTripEntity.isEmpty()) {
+            throw new TripNotFoundException(tripId);
+        }
+        return userTripEntity.get().stream()
+                .map(userTrip -> new User(
+                        userTrip.getUser().getId(),
+                        userTrip.getUser().getName(),
+                        userTrip.getUser().getSurname(),
+                        userTrip.getUser().getEmail()
+                ))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    public void addPassagerToTrajet(Integer tripId, UUID userId) {
+        Optional<TripEntity> tripEntity = tripRepository.findById(tripId);
+        if(tripEntity.isEmpty()) {
+            throw new TripNotFoundException(tripId);
+        }
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if(userEntity.isEmpty()) {
+            throw new UserNotFoundException(userId);
+        }
+        Optional<RoleEntity> roleEntity = roleRepository.findByName("Passager");
+        if(roleEntity.isEmpty()) {
+            throw new RoleNotFoundException("Passager");
+        }
+        userTripRepository.save(new UserTripEntity(
+            userEntity.get(),
+            tripEntity.get(),
+            roleEntity.get()
+        ));
     }
 }
