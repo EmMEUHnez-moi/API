@@ -24,11 +24,16 @@ public class UserService {
 
     @Autowired
     private UserTripRepository userTripRepository;
-
+  
     @Autowired
     private AdminAuthentificationService adminAuthentificationService;
+  
+    public UserService(UserRepository userRepository, UserTripRepository userTripRepository) {
+        this.userRepository = userRepository;
+        this.userTripRepository = userTripRepository;
+    }
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
