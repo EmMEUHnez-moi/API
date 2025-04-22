@@ -121,4 +121,23 @@ public class TripService {
             roleEntity.get()
         ));
     }
-}
+    public void removePassagerFromTrajet(Integer tripId, UUID userId) {
+        log.info("Invoking removePassagerFromTrajet with tripId={} and userId={}",tripId,userId);
+        Optional<TripEntity> tripEntity = tripRepository.findById(tripId);
+        if(tripEntity.isEmpty()) {
+            log.warn("Cannot find trip with tripId={}",tripId);
+            throw new TripNotFoundException(tripId);
+        }
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if(userEntity.isEmpty()) {
+            log.warn("Cannot find user with userId={}",userId);
+            throw new UserNotFoundException(userId);
+        }
+        Optional<RoleEntity> roleEntity = roleRepository.findByName("Passager");
+        if(roleEntity.isEmpty()) {
+            log.warn("Cannot find role");
+            throw new RoleNotFoundException("Passager");
+        }
+        UserTripEntity userTripEntity = userTripRepository.findByUserAndTrip(userEntity,tripEntity);
+        userTripRepository.delete(userTripEntity);
+    }}

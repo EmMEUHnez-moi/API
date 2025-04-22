@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +28,8 @@ public class UserService {
   
     @Autowired
     private AdminAuthentificationService adminAuthentificationService;
+
+    public UserService(){}
   
     public UserService(UserRepository userRepository, UserTripRepository userTripRepository) {
         this.userRepository = userRepository;
@@ -125,5 +128,20 @@ public class UserService {
         }
         userRepository.deleteById(userId);
         adminAuthentificationService.deleteUser(userId);
+    }
+
+    public void changeDetails (UUID userId, UserModifications userModifications){
+        log.info("Invoking changeDetails with userId={}, name={}, surname={}, email={}, birth_date={} and phone_number={}",userId,userModifications.name(),userModifications.surname(),userModifications.email(),userModifications.birth_date(),userModifications.phone_number());
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if(userEntity.isEmpty()) {
+            log.warn("Cannot find user with userId={}",userId);
+            throw new UserNotFoundException(userId);
+        }
+        userEntity.get().setName(userModifications.name());
+        userEntity.get().setSurname(userModifications.surname());
+        userEntity.get().setEmail(userModifications.email());
+        userEntity.get().setBirth_date(userModifications.birth_date());
+        userEntity.get().setPhone_number(userModifications.phone_number());
+        userRepository.save(userEntity.get());
     }
 }

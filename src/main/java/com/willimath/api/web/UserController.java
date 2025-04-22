@@ -2,6 +2,7 @@ package com.willimath.api.web;
 
 import com.willimath.api.model.User;
 import com.willimath.api.model.UserDetails;
+import com.willimath.api.model.UserModifications;
 import com.willimath.api.model.UserToSave;
 import com.willimath.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Tag(name = "User", description = "The User API")
@@ -63,9 +65,37 @@ public class UserController {
         return userService.getUserById(user_id);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete user",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Error.class))),
+
+    })
     @Operation(summary = "Delete a user", description = "Delete a user", security = {@SecurityRequirement(name = "bearerAuth")})
     @DeleteMapping("/{user_id}")
     public void deleteUser(@PathVariable("user_id") UUID user_id) {
         userService.deleteUser(user_id);
     }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Change user details",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Error.class))),
+
+    })
+    @Operation(summary = "Change a user details", description = "Change a user details", security = {@SecurityRequirement(name = "bearerAuth")})
+    @PutMapping("/{user_id}")
+    public void changeDetails (@PathVariable("user_id") UUID user_id, @RequestBody UserModifications userModifications ){
+
+        userService.changeDetails(user_id, userModifications);
+    }
+
+
+
 }
